@@ -8,41 +8,79 @@ class App extends React.Component {
     this.state = {
       list: [
         {
-          title: 'My first React app',
-          desc: 'Create my first react app'
-        },
-        {
-          title: 'Display tasks',
-          desc: 'Display tasks stored in state'
-        },
-        {
-          title: 'Click on title',
-          desc: 'Display tasks description by clicking on title'
-        },
-        {
-          title: 'Delete task',
-          desc: 'Click on delete button to delete a task'
-        },
-        {
-          title: 'Alt text',
-          desc: 'If there is no task display an alternative text'
+          title: 'Edit a task',
+          desc: 'Edit a task'
         },
         {
           title: 'create new task',
           desc: 'Create a new task by clicking add Todo button'
         },
         {
-          title: 'Edit a task',
-          desc: 'Edit a task'
+          title: 'Alt text',
+          desc: 'If there is no task display an alternative text'
+        },
+        {
+          title: 'Delete task',
+          desc: 'Click on delete button to delete a task'
+        },
+        {
+          title: 'Click on title',
+          desc: 'Display tasks description by clicking on title'
+        },
+        {
+          title: 'Display tasks',
+          desc: 'Display tasks stored in state'
+        },
+        {
+          title: 'My first React app',
+          desc: 'Create my first react app'
         }
-      ]
+      ],
+      title: '',
+      desc: ''
     }
+
+    this.handleDeleteTask = this.handleDeleteTask.bind(this);
+    this.handleChangeInput = this.handleChangeInput.bind(this);
+    this.handleChangeText = this.handleChangeText.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleDeleteTask(i) {
     const list = this.state.list;
     list.splice(i, 1);
     this.setState({list: list})
+  }
+
+  handleChangeInput(e) {
+    this.setState({title: e.target.value});
+  }
+
+  handleChangeText(e) {
+    this.setState({desc: e.target.value});
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+
+    if (this.state.title === '') {
+      return;
+    }
+
+    const list = this.state.list;
+    const task = {
+      'title': this.state.title,
+      'desc': this.state.desc
+    };
+    list.unshift(task);
+
+    document.getElementById('desc').value = '';
+
+    this.setState({
+      list: list,
+      title: '',
+      desc: ''
+    })
   }
 
   render() {
@@ -54,14 +92,29 @@ class App extends React.Component {
 
         <section>
           <button>Add Todo</button>
+          <form onSubmit={this.handleSubmit}>
+            <label htmlFor="title">
+              <span>Title:</span>
+              <input type="text" id="title" value={this.state.title} onChange={this.handleChangeInput}/>
+            </label>
+            <label htmlFor="desc">
+              <span>Description:</span>
+              <textarea id="desc" cols="30" rows="10" defaultValue={this.state.desc}
+  onChange={this.handleChangeText}/>
+            </label>
+            <div className="actions">
+              <input type="submit" value="Add"/>
+            </div>
+
+          </form>
         </section>
 
         <section>
           {this.state.list.length > 0
             ? <TodoList
-                todolist={this.state.list}
-                onDelete={(i) => this.handleDeleteTask(i)}
-              />
+              todolist={this.state.list}
+              onDelete={(i) => this.handleDeleteTask(i)}
+            />
             : <em>You have no tasks</em>
           }
         </section>
