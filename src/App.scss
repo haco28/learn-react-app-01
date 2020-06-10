@@ -1,0 +1,62 @@
+.App{
+  width: auto;
+  max-width: 1080px;
+  margin: auto;
+  font-family: sans-serif;
+
+  @media screen and (max-width: 1080px){
+    padding: 0 1rem;
+  }
+
+  header{
+    h1{
+      text-align: center;
+      font-size: 4rem;
+      margin: 0;
+      padding: 1rem 0;
+    }
+    background: lightgray;
+    margin-bottom: 1rem;
+  }
+
+  section {
+    margin-bottom: 1rem;
+
+    .TodoList{
+      h2{
+        font-size: 2rem;
+        margin: 0;
+      }
+      .TodoListItem{
+        border: 1px lightgray solid;
+        margin: 5px auto;
+        padding: 1rem;
+
+        div.TodoListItemTitle {
+          display: flex;
+          flex-flow: row;
+          span {
+            font-size: 1rem;
+            font-weight: bold;
+            color: blue;
+            display: block;
+            cursor: pointer;
+            flex: 1;
+          }
+          button {
+            flex:none;
+          }
+        }
+
+        p {
+          color: gray;
+        }
+
+        hr{
+          border: 0;
+          border-bottom: 1px solid lightgray;
+        }
+      }
+    }
+  }
+}
