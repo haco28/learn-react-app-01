@@ -69,6 +69,7 @@
           }
           button {
             flex:none;
+            margin-left: 1rem;
           }
         }
 
@@ -79,6 +80,28 @@
         hr{
           border: 0;
           border-bottom: 1px solid lightgray;
+        }
+      }
+      form {
+        background: rgba(0,0,255, 0.1);
+        .TodoListItem{
+          display: flex;
+          flex-flow: column;
+          .TodoListItemTitle{
+            input[type="text"]{
+              flex: 1;
+              border: 1px solid lightgray;
+              font-family: sans-serif;
+            }
+          }
+          textarea{
+            border: 1px solid lightgray;
+            font-family: sans-serif;
+            margin-bottom: 1rem;
+          }
+          .actions{
+            text-align: right;
+          }
         }
       }
     }

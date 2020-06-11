@@ -39,13 +39,21 @@ class App extends React.Component {
       ],
       formIsDisplayed: false,
       title: '',
-      desc: ''
+      desc: '',
+      currentTask: null,
+      editing: false
     }
 
-    this.handleDeleteTask = this.handleDeleteTask.bind(this);
-    this.handleChangeInput = this.handleChangeInput.bind(this);
-    this.handleChangeText = this.handleChangeText.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClickEdit = this.handleClickEdit.bind(this);
+  }
+
+  handleShowTask(i) {
+    const currentTask = this.state.currentTask;
+
+    this.setState({
+      currentTask: i === currentTask ? null : i,
+      editing: false
+    })
   }
 
   handleDeleteTask(i) {
@@ -72,7 +80,7 @@ class App extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    if (this.state.title === '') {
+    if (this.state.title === '' && this.state.desc === '') {
       return;
     }
 
@@ -89,6 +97,37 @@ class App extends React.Component {
       list: list,
       title: '',
       desc: ''
+    })
+  }
+
+  handleClickEdit(i) {
+    this.setState(prevState => ({
+      title: !prevState.editing ? this.state.list[i].title : '',
+      desc: !prevState.editing ? this.state.list[i].desc : '',
+      currentTask: i,
+      editing: !prevState.editing
+    }));
+  }
+
+  handleUpdateTask(i) {
+    if (this.state.title === '' && this.state.desc === '') {
+      return;
+    }
+
+    const task = {
+      title: this.state.title,
+      desc: this.state.desc
+    }
+
+    let list = this.state.list;
+    list[i] = task;
+
+    this.setState({
+      title: '',
+      desc: '',
+      currentTask: i,
+      editing: false,
+      list: list
     })
   }
 
@@ -117,7 +156,16 @@ class App extends React.Component {
           {this.state.list.length > 0
             ? <TodoList
               todolist={this.state.list}
+              onClickShow={(i) => this.handleShowTask(i)}
               onDelete={(i) => this.handleDeleteTask(i)}
+              onClickEdit={(i) => this.handleClickEdit(i)}
+              onClickUpdate={(i) => this.handleUpdateTask(i)}
+              handleChangeInput={(e) => this.handleChangeInput(e)}
+              handleChangeText={(e) => this.handleChangeText(e)}
+              title={this.state.title}
+              desc={this.state.desc}
+              current={this.state.currentTask}
+              editing={this.state.editing}
             />
             : <em>You have no tasks</em>
           }
