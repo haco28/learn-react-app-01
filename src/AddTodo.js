@@ -5,7 +5,9 @@ export default class AddTodo extends React.Component {
     const formIsDisplayed = this.props.formIsDisplayed;
     return (
       <div>
-        <button onClick={this.props.onAddClick}>Add Todo</button>
+        <button onClick={this.props.onAddClick}>
+          {!formIsDisplayed ? 'Add Todo' : 'Cancel'}
+        </button>
 
         {formIsDisplayed
           ? <form onSubmit={this.props.handleSubmit}>
