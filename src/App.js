@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.scss';
 import TodoList from "./TodoList";
+import AddTodo from "./AddTodo";
 
 class App extends React.Component {
   constructor() {
@@ -92,7 +93,7 @@ class App extends React.Component {
   }
 
   render() {
-    const opened = this.state.formIsDisplayed;
+    const formIsDisplayed = this.state.formIsDisplayed;
     return (
       <div className="App">
         <header className="App-header">
@@ -100,25 +101,16 @@ class App extends React.Component {
         </header>
 
         <section>
-          <button onClick={() => {this.handleDisplayForm()}}>Add Todo</button>
-          {opened
-            ? <form onSubmit={this.handleSubmit}>
-              <label htmlFor="title">
-                <span>Title:</span>
-                <input type="text" id="title" value={this.state.title} onChange={this.handleChangeInput}/>
-              </label>
-              <label htmlFor="desc">
-                <span>Description:</span>
-                <textarea id="desc" cols="30" rows="10" defaultValue={this.state.desc}
-                          onChange={this.handleChangeText}/>
-              </label>
-              <div className="actions">
-                <button type="button" onClick={() => {this.handleDisplayForm()}}>Cancel</button>
-                <button type="submit">Add</button>
-              </div>
-            </form>
-            : ''
-          }
+          <AddTodo
+            onAddClick={() => this.handleDisplayForm()}
+            formIsDisplayed={formIsDisplayed}
+            handleSubmit={(e) => this.handleSubmit(e)}
+            handleChangeInput={(e) => this.handleChangeInput(e)}
+            handleChangeText={(e) => this.handleChangeText(e)}
+            handleDisplayForm={() => this.handleDisplayForm()}
+            title={this.state.title}
+            desc={this.state.desc}
+          />
         </section>
 
         <section>
