@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.scss';
-import TodoList from "./TodoList";
-import AddTodo from "./AddTodo";
+import TodoList from "./components/TodoList";
+import AddTodo from "./components/AddTodo";
 
 class App extends React.Component {
   constructor() {
