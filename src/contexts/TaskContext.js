@@ -1,8 +1,8 @@
-import React, {Component, createContext} from "react";
+import React, {createContext} from "react";
 
 export const TaskContext = createContext();
 
-export default class TaskContextProvider extends Component{
+export default class TaskContextProvider{
   state = {
     list: [
       {
