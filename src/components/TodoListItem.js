@@ -3,14 +3,14 @@ import {TaskContext} from "../contexts/TaskContext";
 
 const TodoListItem = ({id, data}) => {
   const {
-    handleShowTask,
-    handleDeleteTask,
-    handleClickEdit,
-    handleUpdateTask,
-    handleChangeInput,
-    handleChangeText,
+    currentTask,
     editing,
-    currentTask
+    handleSubmitUpdateTaskForm,
+    onTitleChange,
+    onDescChange,
+    removeTask,
+    toggleEditTask,
+    toggleShowTask
   } = useContext(TaskContext);
   const showEditForm = editing && id === currentTask;
   const {title, desc} = data;
@@ -20,9 +20,9 @@ const TodoListItem = ({id, data}) => {
     return (
       <div className='TodoListItem'>
         <div className="TodoListItemTitle">
-          <span onClick={() => handleShowTask(id)}>{title}</span>
-          <button onClick={() => handleDeleteTask(id)}>DELETE</button>
-          <button onClick={() => handleClickEdit(id)}>EDIT</button>
+          <span onClick={() => toggleShowTask(id)}>{title}</span>
+          <button onClick={() => removeTask(id)}>DELETE</button>
+          <button onClick={() => toggleEditTask(id)}>EDIT</button>
         </div>
         {isOpen && <div>
           <hr/>
@@ -36,13 +36,13 @@ const TodoListItem = ({id, data}) => {
       <form>
         <div className='TodoListItem'>
           <div className="TodoListItemTitle">
-            <input id="input" type="text" defaultValue={title} onChange={handleChangeInput}/>
+            <input id="input" type="text" defaultValue={title} onChange={onTitleChange}/>
           </div>
           <hr/>
-          <textarea id="text" defaultValue={desc} onChange={handleChangeText}/>
+          <textarea id="text" defaultValue={desc} onChange={onDescChange}/>
           <div className="actions">
-            <button type="button" onClick={() => handleUpdateTask(id)}>Update</button>
-            <button type="button" onClick={() => handleClickEdit(id)}>Cancel</button>
+            <button type="button" onClick={() => handleSubmitUpdateTaskForm(id)}>Update</button>
+            <button type="button" onClick={() => toggleEditTask(id)}>Cancel</button>
           </div>
         </div>
       </form>
