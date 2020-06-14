@@ -1,33 +1,42 @@
 import React from "react";
 
-export default class AddTodo extends React.Component {
-  render() {
-    const formIsDisplayed = this.props.formIsDisplayed;
-    return (
-      <div>
-        <button onClick={this.props.onAddClick}>
-          {!formIsDisplayed ? 'Add Todo' : 'Cancel'}
-        </button>
+import {TaskContext} from "../contexts/TaskContext";
 
-        {formIsDisplayed
-          ? <form onSubmit={this.props.handleSubmit}>
-            <label htmlFor="title">
-              <span>Title:</span>
-              <input type="text" id="title" value={this.props.title} onChange={this.props.handleChangeInput}/>
-            </label>
-            <label htmlFor="desc">
-              <span>Description:</span>
-              <textarea id="desc" cols="30" rows="10" defaultValue={this.props.desc}
-                        onChange={this.props.handleChangeText}/>
-            </label>
-            <div className="actions">
-              <button type="button" onClick={this.props.handleDisplayForm}>Cancel</button>
-              <button type="submit">Add</button>
-            </div>
-          </form>
-          : ''
-        }
-      </div>
+export default class AddTodo extends React.Component {
+  static contextType = TaskContext;
+
+  render() {
+    return (
+      <TaskContext.Consumer>{(context) => {
+        const {formIsDisplayed, handleDisplayForm, title, desc, handleChangeInput, handleChangeText, handleSubmit} = context;
+        return(
+          <div>
+            <button onClick={handleDisplayForm}>
+              {!formIsDisplayed ? 'Add Todo' : 'Cancel'}
+            </button>
+
+            {formIsDisplayed
+              ? <form onSubmit={handleSubmit}>
+                <label htmlFor="title">
+                  <span>Title:</span>
+                  <input type="text" id="title" value={title} onChange={handleChangeInput}/>
+                </label>
+                <label htmlFor="desc">
+                  <span>Description:</span>
+                  <textarea id="desc" cols="30" rows="10" defaultValue={desc}
+                            onChange={handleChangeText}/>
+                </label>
+                <div className="actions">
+                  <button type="button" onClick={handleDisplayForm}>Cancel</button>
+                  <button type="submit">Add</button>
+                </div>
+              </form>
+              : ''
+            }
+          </div>
+        );
+      }}
+      </TaskContext.Consumer>
     );
   }
 }
