@@ -1,40 +1,28 @@
-import React from "react";
+import React, {useContext} from "react";
 import {TaskContext} from "../contexts/TaskContext";
 
-export default class TodoListItem extends React.Component {
-  static contextType = TaskContext;
+const TodoListItem = ({id, data}) => {
+  const {
+    handleShowTask,
+    handleDeleteTask,
+    handleClickEdit,
+    handleUpdateTask,
+    handleChangeInput,
+    handleChangeText,
+    editing,
+    currentTask
+  } = useContext(TaskContext);
+  const showEditForm = editing && id === currentTask;
+  const {title, desc} = data;
+  const isOpen = id === currentTask;
 
-  handleShowTask () {
-    const {handleShowTask} = this.context;
-    return handleShowTask(this.props.id);
-  }
-
-  handleDeleteTask () {
-    const {handleDeleteTask} = this.context;
-    return handleDeleteTask(this.props.id);
-  }
-
-  handleClickEdit () {
-    const {handleClickEdit} = this.context;
-    return handleClickEdit(this.props.id);
-  }
-
-  handleUpdateTask () {
-    const {handleUpdateTask} = this.context;
-    return handleUpdateTask(this.props.id);
-  }
-
-  renderTask() {
-    const {currentTask} = this.context;
-    const {title, desc} = this.props.data;
-    const isOpen = this.props.id === currentTask;
-
+  const renderTask = () => {
     return (
       <div className='TodoListItem'>
         <div className="TodoListItemTitle">
-          <span onClick={() => this.handleShowTask()}>{title}</span>
-          <button onClick={() => this.handleDeleteTask()}>DELETE</button>
-          <button onClick={() => this.handleClickEdit()}>EDIT</button>
+          <span onClick={() => handleShowTask(id)}>{title}</span>
+          <button onClick={() => handleDeleteTask(id)}>DELETE</button>
+          <button onClick={() => handleClickEdit(id)}>EDIT</button>
         </div>
         {isOpen && <div>
           <hr/>
@@ -43,34 +31,29 @@ export default class TodoListItem extends React.Component {
     );
   }
 
-  renderEditTask() {
-    const {handleChangeInput, handleChangeText} = this.context;
-    const {title, desc} = this.props.data;
-    return(
+  const renderEditTask = () => {
+    return (
       <form>
         <div className='TodoListItem'>
           <div className="TodoListItemTitle">
             <input id="input" type="text" defaultValue={title} onChange={handleChangeInput}/>
           </div>
           <hr/>
-          <textarea id="text" defaultValue={desc} onChange={handleChangeText} />
+          <textarea id="text" defaultValue={desc} onChange={handleChangeText}/>
           <div className="actions">
-            <button type="button" onClick={() => this.handleUpdateTask()}>Update</button>
-            <button type="button" onClick={() => this.handleClickEdit()}>Cancel</button>
+            <button type="button" onClick={() => handleUpdateTask(id)}>Update</button>
+            <button type="button" onClick={() => handleClickEdit(id)}>Cancel</button>
           </div>
         </div>
       </form>
     );
   }
 
-  render() {
-    const {editing, currentTask} = this.context;
-    const showEditForm = editing && this.props.id === currentTask;
-
-    if (showEditForm) {
-      return (<div>{this.renderEditTask()}</div>)
-    }
-
-    return  (<div>{this.renderTask()}</div>)
-  }
+  return (
+    showEditForm
+      ? <div>{renderEditTask()}</div>
+      : <div>{renderTask()}</div>
+  );
 }
+
+export default TodoListItem;
