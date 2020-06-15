@@ -1,123 +1,77 @@
-import React, {createContext, useState} from "react";
+import React, {createContext, useReducer} from "react";
+import taskReducer from "../reducers/taskReducer";
 
 export const TaskContext = createContext();
 
 const TaskContextProvider = (props)  => {
-  const [list, setTask] = useState([
-    {
-      title: 'Edit a task',
-      desc: 'Edit a task'
-    },
-    {
-      title: 'create new task',
-      desc: 'Create a new task by clicking add Todo button'
-    },
-    {
-      title: 'Alt text',
-      desc: 'If there is no task display an alternative text'
-    },
-    {
-      title: 'Delete task',
-      desc: 'Click on delete button to delete a task'
-    },
-    {
-      title: 'Click on title',
-      desc: 'Display tasks description by clicking on title'
-    },
-    {
-      title: 'Display tasks',
-      desc: 'Display tasks stored in state'
-    },
-    {
-      title: 'My first React app',
-      desc: 'Create my first react app'
+  const [state, dispatch] = useReducer(taskReducer, {
+      list: [],
+      title: '',
+      desc: '',
+      editing: false,
+      currentTask: null,
+      formIsDisplayed: false
     }
-  ]);
+  );
 
-  const addTask = (title, desc) => {
-    setTask([{title, desc}, ...list])
-  }
-
-  const removeTask = (id) => {
-    setTask(list.filter((task,index) =>  id !== index ));
-  }
-
-  const updateTask = (id, task) => {
-    let tasksList = list;
-    tasksList[id] = task;
-    setTask([...tasksList])
-  }
-
-  const [currentTask, setCurrent] = useState(null);
-  const setCurrentTask = (id) => {
-    setCurrent(id);
-  };
-  const toggleShowTask = (id) => {
-    setCurrentTask((prevState) => prevState === id ? null : id);
-    setEditingValue(false);
-  }
-
-  const [formIsDisplayed, displayForm] = useState(false);
-  const toggleDisplayForm = () => {
-    displayForm((prevState => !prevState));
-    setTitleValue('');
-    setDescValue('');
-  }
-
-  const [title, setTitle] = useState('');
-  const setTitleValue = (value) => {
-    setTitle(value);
-  }
   const onTitleChange = (event) => {
-    setTitleValue(event.target.value);
-  }
-
-  const [desc, setDesc] = useState('');
-  const setDescValue = (value) => {
-    setDesc(value);
+    dispatch({type: 'SET_TITLE', title: event.target.value});
   }
   const onDescChange = (event) => {
-    setDescValue(event.target.value);
+    dispatch({type: 'SET_DESC', desc: event.target.value});
+  }
+
+  const handleRemoveTask = (id) => {
+    dispatch({type: 'REMOVE_TASK', id})
+  }
+
+  const toggleShowTask = (id) => {
+    dispatch({type: 'SET_CURRENT_TASK', id});
+    dispatch({type: 'EDITING', value: false});
+  }
+
+  const toggleDisplayForm = () => {
+    dispatch({type: 'TOGGLE_DISPLAY_FORM'});
+    dispatch({type: 'SET_TITLE', title: ''});
+    dispatch({type: 'SET_DESC', desc: ''});
+  }
+
+  const toggleEditTask = (id) => {
+    dispatch({type: 'SET_CURRENT_TASK', id});
+    dispatch({type: 'EDITING', value: !state.editing});
+    dispatch({type: 'SET_TITLE', title: state.title === '' ? state.list[id].title : ''});
+    dispatch({type: 'SET_DESC', desc: state.desc === '' ? state.list[id].desc : ''});
   }
 
   const handleSubmitCreateTaskForm = (event) => {
     event.preventDefault();
 
-    addTask(title, desc);
+    if (state.title === '' && state.desc === '') {
+      return;
+    }
+
+    dispatch({type: 'ADD_TASK', title: state.title, desc: state.desc})
     toggleDisplayForm();
   }
 
-  const [editing, setEditing] = useState(false);
-  const setEditingValue = (value) => {
-    setEditing(value);
-  };
+  const handleSubmitUpdateTaskForm = (event, id) => {
+    event.preventDefault();
 
-  const toggleEditTask = (id) => {
-    setCurrentTask(id);
-    setEditingValue((prevState => !prevState));
-    setTitleValue((prevState => prevState === '' ? list[id].title : ''));
-    setDescValue((prevState => prevState === '' ? list[id].desc : ''));
-  }
-
-  const handleSubmitUpdateTaskForm = (id) => {
-    if (title === '' && desc === '') {
+    if (state.title === '' && state.desc === '') {
       return;
     }
-    updateTask(id, {title, desc});
+    dispatch({type: 'UPDATE_TASK', id, title: state.title, desc: state.desc})
     toggleEditTask(id);
   }
 
   return(
     <TaskContext.Provider value={{
-      currentTask,
-      editing,
-      formIsDisplayed,
-      list,
+      ...state,
       handleSubmitCreateTaskForm,
       handleSubmitUpdateTaskForm,
+      handleRemoveTask,
       onDescChange,
       onTitleChange,
-      removeTask,
       toggleDisplayForm,
       toggleEditTask,
       toggleShowTask
