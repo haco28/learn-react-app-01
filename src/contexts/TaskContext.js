@@ -5,34 +5,7 @@ export const TaskContext = createContext();
 
 const TaskContextProvider = (props)  => {
   const [state, dispatch] = useReducer(taskReducer, {
-      list: [{
-        title: 'Edit a task',
-        desc: 'Edit a task'
-      },
-        {
-          title: 'create new task',
-          desc: 'Create a new task by clicking add Todo button'
-        },
-        {
-          title: 'Alt text',
-          desc: 'If there is no task display an alternative text'
-        },
-        {
-          title: 'Delete task',
-          desc: 'Click on delete button to delete a task'
-        },
-        {
-          title: 'Click on title',
-          desc: 'Display tasks description by clicking on title'
-        },
-        {
-          title: 'Display tasks',
-          desc: 'Display tasks stored in state'
-        },
-        {
-          title: 'My first React app',
-          desc: 'Create my first react app'
-        }],
+      list: [],
       title: '',
       desc: '',
       editing: false,
