@@ -1,31 +1,57 @@
 const taskReducer = (state, action) => {
-  let {list, currentTask, formIsDisplayed, title, desc, editing} = state;
+  let {list} = state;
 
   switch (action.type) {
+
     case 'ADD_TASK':
-      list = [{title: action.title, desc: action.desc}, ...list];
-      return {...state, list}
+      return {
+        ...state,
+        list: [{title: action.title, desc: action.desc}, ...list]
+      }
+
     case 'UPDATE_TASK':
       list[action.id] = {title: action.title, desc: action.desc};
-      return {...state, list}
+      return {
+        ...state,
+        list
+      }
+
     case 'REMOVE_TASK':
-      list = list.filter((task,index) =>  action.id !== index );
-      return {...state, list};
+      return {
+        ...state,
+        list: list.filter((task,index) =>  action.id !== index )
+      };
+
     case 'SET_CURRENT_TASK':
-      currentTask = state.currentTask === action.id ? null : action.id;
-      return {...state, currentTask};
+      return {
+        ...state,
+        currentTask: action.id
+      };
+
     case 'TOGGLE_DISPLAY_FORM':
-      formIsDisplayed = !state.formIsDisplayed;
-      return {...state, formIsDisplayed};
+      return {
+        ...state,
+        formIsDisplayed: !state.formIsDisplayed
+      };
+
     case 'SET_TITLE':
-      title = action.title;
-      return {...state, title};
+      return {
+        ...state,
+        title: action.title
+      };
+
     case 'SET_DESC':
-      desc = action.desc;
-      return {...state, desc};
+      return {
+        ...state,
+        desc: action.desc
+      };
+
     case 'EDITING':
-      editing = action.value;
-      return {...state, editing};
+      return {
+        ...state,
+        editing: action.value
+      };
+
     default:
       return state;
   }
